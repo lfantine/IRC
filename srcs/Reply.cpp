@@ -4,7 +4,7 @@
 
 std::string	replyMess(std::string message, std::vector<User>::iterator& the, std::string channel){
 	std::stringstream 	ss;
-	ss << ":" << the->getNickname() <<  "!" << the->getUsername() << "@" << IP_ADDR << " PRIVMSG "<< channel << " " << message << "\r\n";
+	ss << ":" << the->getNickname() <<  "!" << the->getUsername() << "@" << IP_ADDR << " PRIVMSG "<< channel << " :" << message << "\r\n";
 	return ss.str();
 }
 

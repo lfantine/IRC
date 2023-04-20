@@ -291,7 +291,7 @@ void	User::PRIVMSG(std::string line, Server& serv, int id){
 	std::string message;
 	while (line[i] == ' ')
 		i++;
-	while (std::isalpha(line[i]))
+	while (line[i] != ' ' && line[i] != '\n' && line[i] != '\r')
 	{
 		target.push_back(line[i]);
 		i++;
@@ -300,9 +300,10 @@ void	User::PRIVMSG(std::string line, Server& serv, int id){
 		i++;
 	if (line[i++] != ':')
 		return ;
-	while (std::isalpha(line[i]) || line[i] == ' '){
+	while (std::isprint(line[i]) && line[i] != '\n'){
 		message.push_back(line[i]);
 		i++;
 	}
+	//std::cout << "TARGET=" << target << std::endl;
 	serv.channelMess(message, target, id);
 }

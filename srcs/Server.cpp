@@ -81,7 +81,11 @@ int	Server::CCRoom(std::string name_, std::string key_, int id){
 				this->_Rooms[i].members.push_back(id);
 				for (size_t h = 0; h < this->_Rooms[i].members.size(); h++)
 					mySend(replyJOIN(name_, the), this->_Rooms[i].members[h]);
-					//mySend(replyJOIN(name_, the), id);
+				for (std::vector<User>::iterator uit = this->_Users.begin(); uit != this->_Users.end(); uit++)
+				{
+					if (uit->getID() != id)
+						mySend(replyJOIN(name_, uit), id);
+				}
 			}
 			else if (!this->_Rooms[i].isHub && this->_Rooms[i].key != key_)
 			{
@@ -116,8 +120,9 @@ int	Server::LDRoom(std::string name_, int id){
 					std::vector<unsigned int>::iterator it = this->_Rooms[i].members.begin();
 					for (size_t k = 0; k < j; k++)
 						it++;
+					for (size_t h = 0; h < this->_Rooms[i].members.size(); h++)
+						mySend(replyPART(name_, the), this->_Rooms[i].members[h]);
 					this->_Rooms[i].members.erase(it);
-					mySend(replyPART(name_, the), id);
 					if (this->_Rooms[i].members.size() < 1)
 					{
 						std::vector<Channel>::iterator it2 = this->_Rooms.begin();
@@ -262,6 +267,19 @@ int	Server::StartServer(){
 						Find_USER
 						std::cout << "Connection closed" << std::endl;
 						// USER_DISCONNECT
+						for (size_t j = 0; j < this->_Rooms.size(); j++)
+						{
+							for (unsigned int ui = 0; ui < this->_Rooms[j].members.size(); ui++)
+							{
+								if (this->_Rooms[j].members[ui] == static_cast<unsigned int>(ip))
+								{
+									std::string part = "PART ";
+									part += this->_Rooms[j].name + " :Weechat 3.7.1\r\n";
+									std::cout << "MESS=" << part << std::endl;
+									the->PART(part, *this);
+								}
+							}
+						}
 						this->_Users.erase(the);
 						close_conn = true;
 						break ;
@@ -308,7 +326,6 @@ int	Server::StartServer(){
 				}
 			}
 		}
-		
 	} while (this->_ON);
 	for (size_t i = 0; i < this->_fds.size(); i++)
 		close(this->_fds[i].fd);
