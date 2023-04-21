@@ -165,11 +165,12 @@ void	Server::MP(std::string message, std::string target, int ip)
 	}
 }
 
-void	Server::Notice(std::string target, std::string message){
+void	Server::Notice(std::string target, std::string message, int ip){
+	Find_USER
 	for (size_t i = 0; i < this->_Users.size(); i++)
 	{
 		if (this->_Users[i].getNickname() == target){
-			// DO NOTICE
+			mySend(replyNOTICE(message, the), this->_Users[i].getID());
 			return;
 		}
 	}
@@ -410,7 +411,7 @@ int			Server::action(int ip, char* buf, int len)
 			}
 			else if (strFind("NOTICE ", tab[0])){
 				std::cout << LINE << std::endl;
-				the->PING();
+				the->NOTICE(LINE, *this);
 			}
 			else
 				std::cout << LINE << std::endl;

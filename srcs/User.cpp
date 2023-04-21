@@ -335,11 +335,15 @@ void	User::NOTICE(std::string line, Server& serv){
 	}
 	while(line[i] == ' ')
 		i++;
+	if (line[i] == ':')
+		i++;
+	else
+		return ; // Error
 	while (line[i] != '\n' && line[i] != '\r')
 	{
 		message.push_back(line[i]);
 		i++;
 	}
 	if (target.size() > 0 && message.size() > 0)
-		serv.Notice(target, message);
+		serv.Notice(target, message, this->getID());
 }

@@ -14,6 +14,12 @@ std::string	replyPONG(){
 	return ss.str();
 }
 
+std::string replyNOTICE(std::string message, std::vector<User>::iterator& the){
+	std::stringstream 	ss;
+	ss << ":" << the->getNickname() <<  "!" << the->getUsername() << "@" << IP_ADDR << " NOTICE s " << message << "\r\n";
+	return ss.str();
+}
+
 std::string	replyWelcome(std::vector<User>::iterator& the){
 	std::stringstream 	ss;
 	ss << ":" << IP_ADDR << " 001 " << the->getNickname() << " Welcome to the CHAT " << the->getNickname() << "!" << the->getUsername() << "@" << IP_ADDR << "\r\n";
