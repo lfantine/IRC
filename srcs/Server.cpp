@@ -152,6 +152,29 @@ void	Server::channelMess(std::string message, std::string channel, int ip){
 	// NO CHANNEL FOUND
 }
 
+void	Server::MP(std::string message, std::string target, int ip)
+{
+	Find_USER
+	for (size_t i = 0; i < this->_Users.size(); i++)
+	{
+		if (this->_Users[i].getNickname() == target)
+		{
+			mySend(replyMess(message, the, this->_Users[i].getNickname()), this->_Users[i].getID());
+			return;
+		}
+	}
+}
+
+void	Server::Notice(std::string target, std::string message){
+	for (size_t i = 0; i < this->_Users.size(); i++)
+	{
+		if (this->_Users[i].getNickname() == target){
+			// DO NOTICE
+			return;
+		}
+	}
+}
+
 int	Server::CreateServer()
 {
 	int	tempFd = 0;
@@ -371,7 +394,7 @@ int			Server::action(int ip, char* buf, int len)
 			}
 			else if (strFind("JOIN ", tab[0])){
 				std::cout << LINE << std::endl;
-				the->JOIN(LINE, *this);
+				the->JOIN(LINE, *this, the);
 			}
 			else if (strFind("PART ", tab[0])){
 				std::cout << LINE << std::endl;
@@ -380,6 +403,14 @@ int			Server::action(int ip, char* buf, int len)
 			else if (strFind("PRIVMSG ", tab[0])){
 				std::cout << LINE << std::endl;
 				the->PRIVMSG(LINE, *this, ip);
+			}
+			else if (strFind("PING ", tab[0])){
+				std::cout << LINE << std::endl;
+				the->PING();
+			}
+			else if (strFind("NOTICE ", tab[0])){
+				std::cout << LINE << std::endl;
+				the->PING();
 			}
 			else
 				std::cout << LINE << std::endl;

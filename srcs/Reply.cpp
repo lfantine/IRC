@@ -8,6 +8,12 @@ std::string	replyMess(std::string message, std::vector<User>::iterator& the, std
 	return ss.str();
 }
 
+std::string	replyPONG(){
+	std::stringstream 	ss;
+	ss << "PONG " << IP_ADDR << "\r\n";
+	return ss.str();
+}
+
 std::string	replyWelcome(std::vector<User>::iterator& the){
 	std::stringstream 	ss;
 	ss << ":" << IP_ADDR << " 001 " << the->getNickname() << " Welcome to the CHAT " << the->getNickname() << "!" << the->getUsername() << "@" << IP_ADDR << "\r\n";

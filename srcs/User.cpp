@@ -218,7 +218,7 @@ void	User::PASS(std::string line){
 	this->setMdp(tpass);
 }
 
-void	User::JOIN(std::string line, Server& serv){
+void	User::JOIN(std::string line, Server& serv, std::vector<User>::iterator the){
 	if (line.size() < 6){
 		mySend(ERR_NEEDMOREPARAMS("JOIN"), this->getID());
 		return ;
@@ -244,13 +244,20 @@ void	User::JOIN(std::string line, Server& serv){
 		key.push_back(line[i]);
 		i++;
 	}
-	if (serv.CCRoom(name, key, this->getID()))
+	if (name[0] == '#')
 	{
-		for (size_t i = 0; i < this->my_channel.size(); i++){
-			if (this->my_channel[i] == name)
-				return ;
+		if (serv.CCRoom(name, key, this->getID()))
+		{
+			for (size_t i = 0; i < this->my_channel.size(); i++){
+				if (this->my_channel[i] == name)
+					return ;
+			}
+			this->my_channel.push_back(name);
 		}
-		this->my_channel.push_back(name);
+	}
+	else
+	{
+		mySend(replyJOIN(name, the), this->getID());
 	}
 }
 
@@ -305,5 +312,34 @@ void	User::PRIVMSG(std::string line, Server& serv, int id){
 		i++;
 	}
 	//std::cout << "TARGET=" << target << std::endl;
-	serv.channelMess(message, target, id);
+	if (target[0] == '#')
+		serv.channelMess(message, target, id);
+	else
+		serv.MP(message, target, id);
+}
+
+void	User::PING(){
+	mySend(replyPONG(), this->getID());
+}
+
+void	User::NOTICE(std::string line, Server& serv){
+	int	i = 7;
+	while(line[i] == ' ')
+		i++;
+	std::string target;
+	std::string message;
+	while (line[i] != ' ' && line[i] != '\n' && line[i] != '\r')
+	{
+		target.push_back(line[i]);
+		i++;
+	}
+	while(line[i] == ' ')
+		i++;
+	while (line[i] != '\n' && line[i] != '\r')
+	{
+		message.push_back(line[i]);
+		i++;
+	}
+	if (target.size() > 0 && message.size() > 0)
+		serv.Notice(target, message);
 }
