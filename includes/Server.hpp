@@ -23,6 +23,8 @@ public:
 	int		CCRoom(std::string name_, std::string key_, int id);
 	int		LDRoom(std::string name_, int id);
 	void	channelMess(std::string message, std::string channel, int id);
+	void	MP(std::string message, std::string target, int id);
+	void	Notice(std::string target, std::string message, int ip);
 
 private:
 	int			_port;

@@ -46,7 +46,9 @@ public:
 	void	USER(std::string line);
 	void	NICK(std::string line, std::vector<User>& users);
 	void	PASS(std::string line);
-	void	JOIN(std::string line, Server& serv);
+	void	JOIN(std::string line, Server& serv, std::vector<User>::iterator the);
 	void	PART(std::string line, Server& serv);
 	void	PRIVMSG(std::string line, Server& serv, int id);
+	void	PING();
+	void	NOTICE(std::string line, Server& serv);
 };

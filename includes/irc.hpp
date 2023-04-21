@@ -29,6 +29,8 @@ std::vector<User>::iterator the = this->_Users.begin();\
 
 int	mySend(std::string mess, int ip);
 std::string	replyMess(std::string message, std::vector<User>::iterator& the, std::string channel);
+std::string	replyPONG();
+std::string replyNOTICE(std::string message, std::vector<User>::iterator& the);
 std::string	replyWelcome(std::vector<User>::iterator& the);
 std::string	replyJOIN(std::string channel, std::vector<User>::iterator& the);
 std::string	replyPART(std::string channel, std::vector<User>::iterator& the);
